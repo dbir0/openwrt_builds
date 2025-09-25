@@ -1,0 +1,33 @@
+# Build outputs
+/build/
+/bin/
+/dl/
+/feeds/
+/staging_dir/
+/tmp/
+/logs/
+*.log
+
+# OpenWrt build artifacts
+/openwrt/
+/openwrt-*/
+.config*
+!configs/
+
+# Temporary files
+*.tmp
+*.bak
+*~
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# IDE/Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Build cache
+.ccache/
