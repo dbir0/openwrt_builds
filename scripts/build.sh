@@ -11,7 +11,7 @@ OPENWRT_DIR="${BUILD_DIR}/openwrt"
 
 # Configuration
 OPENWRT_REPO="https://github.com/openwrt/openwrt.git"
-DEFAULT_BRANCH="openwrt-24.10"
+DEFAULT_BRANCH="v24.10.3"
 
 # Colors for output
 RED='\033[0;31m'
@@ -90,17 +90,14 @@ setup_openwrt() {
     
     mkdir -p "$BUILD_DIR"
     
-    if [ ! -d "$OPENWRT_DIR" ]; then
-        log_info "Cloning OpenWrt repository..."
-        git clone --depth 1 --branch "$branch" "$OPENWRT_REPO" "$OPENWRT_DIR"
-    else
-        cd "$OPENWRT_DIR"
-        log_info "Updating existing repository..."
-        git fetch --depth 1 origin "$branch"
-        git checkout "$branch"
-    fi
+    log_info "Cloning OpenWrt repository..."
+    git clone "$OPENWRT_REPO" "$OPENWRT_DIR"
     
     cd "$OPENWRT_DIR"
+    
+    log_info "Checking out tag: $branch"
+    git checkout "$branch"
+    
     log_info "Current OpenWrt version: $(git describe --tags --always)"
     
     log_info "Updating and installing feeds..."
