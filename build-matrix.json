@@ -3,22 +3,22 @@
     {
       "device": "netgear-r7800",
       "profile": "home",
-      "version": "v23.05.0"
+      "version": "v24.10.3"
     },
     {
       "device": "netgear-r7800",
       "profile": "business",
-      "version": "v23.05.0"
+      "version": "v24.10.3"
     },
     {
       "device": "netgear-r6900v2",
       "profile": "home",
-      "version": "v23.05.0"
+      "version": "v24.10.3"
     },
     {
       "device": "netgear-r6900v2",
       "profile": "business",
-      "version": "v23.05.0"
+      "version": "v24.10.3"
     }
   ]
 }
