@@ -38,8 +38,8 @@ RUN apt-get update && apt-get install -y \
     bash \
     && rm -rf /var/lib/apt/lists/*
 
-# Fix bash symbolic link issues common in containers
-RUN ln -sf /bin/bash /usr/bin/bash
+    # python3 to bash ai added
+
 
 # Set up working directory
 WORKDIR /workspace
@@ -56,7 +56,6 @@ set -e
 export SHELL="/bin/bash"
 export CONFIG_SHELL="/bin/bash"
 export FORCE=1
-export FORCE_UNSAFE_CONFIGURE=1
 
 if [ -n "$HOST_UID" ] && [ -n "$HOST_GID" ]; then
     # Create group if it doesn't exist
@@ -73,7 +72,6 @@ if [ -n "$HOST_UID" ] && [ -n "$HOST_GID" ]; then
         echo 'export SHELL="/bin/bash"' >> /home/builder/.bashrc
         echo 'export CONFIG_SHELL="/bin/bash"' >> /home/builder/.bashrc
         echo 'export FORCE=1' >> /home/builder/.bashrc
-        echo 'export FORCE_UNSAFE_CONFIGURE=1' >> /home/builder/.bashrc
     fi
     
     # Ensure workspace permissions
