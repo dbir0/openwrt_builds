@@ -71,8 +71,8 @@ build_image() {
 
 run_build() {
     # Set host user ID and group ID for container
-    export UID=$(id -u)
-    export GID=$(id -g)
+    export HOST_UID=$(id -u)
+    export HOST_GID=$(id -g)
     
     # Ensure Docker image is built
     if ! docker image inspect opernwrt_builds_openwrt-builder &>/dev/null; then
@@ -85,8 +85,8 @@ run_build() {
 
 open_shell() {
     # Set host user ID and group ID for container
-    export UID=$(id -u)
-    export GID=$(id -g)
+    export HOST_UID=$(id -u)
+    export HOST_GID=$(id -g)
     
     # Ensure Docker image is built
     if ! docker image inspect opernwrt_builds_openwrt-builder &>/dev/null; then

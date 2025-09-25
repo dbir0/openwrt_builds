@@ -58,60 +58,54 @@ WORKDIR /workspace
 RUN apt-get update && apt-get install -y gosu && rm -rf /var/lib/apt/lists/*
 
 # Create entrypoint script to handle dynamic user creation
-RUN cat > /usr/local/bin/entrypoint.sh << 'EOF'
-#!/bin/bash
-set -e
-
-# Ensure proper environment
-export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-export SHELL="/bin/bash"
-export CONFIG_SHELL="/bin/bash"
-export FORCE=1
-
-# Debug: Test common interpreters
-echo "Testing interpreters..."
-which bash && bash --version | head -1
-which perl && perl --version | head -1
-which python3 && python3 --version
-
-if [ -n "$HOST_UID" ] && [ -n "$HOST_GID" ]; then
-    # Create group if it doesn't exist
-    if ! getent group "$HOST_GID" >/dev/null 2>&1; then
-        groupadd -g "$HOST_GID" builder
-    fi
-    
-    # Create user if it doesn't exist
-    if ! getent passwd "$HOST_UID" >/dev/null 2>&1; then
-        useradd -u "$HOST_UID" -g "$HOST_GID" -m -s /bin/bash builder
-        echo "builder ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-        
-        # Set up user environment
-        echo 'export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"' >> /home/builder/.bashrc
-        echo 'export SHELL="/bin/bash"' >> /home/builder/.bashrc
-        echo 'export CONFIG_SHELL="/bin/bash"' >> /home/builder/.bashrc
-        echo 'export FORCE=1' >> /home/builder/.bashrc
-    fi
-    
-    # Ensure workspace permissions
-    chown -R "$HOST_UID:$HOST_GID" /workspace 2>/dev/null || true
-    
-    # Switch to the created user
-    exec gosu "$HOST_UID:$HOST_GID" "$@"
-else
-    # Fallback: run as root with warning
-    echo "WARNING: Running as root. Set HOST_UID and HOST_GID for better security."
-    exec "$@"
-fi
-EOF
-
-# Make entrypoint script executable
-RUN chmod +x /usr/local/bin/entrypoint.sh
+RUN echo '#!/bin/bash' > /usr/local/bin/entrypoint.sh && \
+    echo 'set -e' >> /usr/local/bin/entrypoint.sh && \
+    echo '' >> /usr/local/bin/entrypoint.sh && \
+    echo '# Ensure proper environment' >> /usr/local/bin/entrypoint.sh && \
+    echo 'export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"' >> /usr/local/bin/entrypoint.sh && \
+    echo 'export SHELL="/bin/bash"' >> /usr/local/bin/entrypoint.sh && \
+    echo 'export CONFIG_SHELL="/bin/bash"' >> /usr/local/bin/entrypoint.sh && \
+    echo 'export FORCE=1' >> /usr/local/bin/entrypoint.sh && \
+    echo '' >> /usr/local/bin/entrypoint.sh && \
+    echo '# Debug: Test common interpreters' >> /usr/local/bin/entrypoint.sh && \
+    echo 'echo "Testing interpreters..."' >> /usr/local/bin/entrypoint.sh && \
+    echo 'which bash && bash --version | head -1' >> /usr/local/bin/entrypoint.sh && \
+    echo 'which perl && perl --version | head -1' >> /usr/local/bin/entrypoint.sh && \
+    echo 'which python3 && python3 --version' >> /usr/local/bin/entrypoint.sh && \
+    echo '' >> /usr/local/bin/entrypoint.sh && \
+    echo 'if [ -n "$HOST_UID" ] && [ -n "$HOST_GID" ]; then' >> /usr/local/bin/entrypoint.sh && \
+    echo '    # Create group if it does not exist' >> /usr/local/bin/entrypoint.sh && \
+    echo '    if ! getent group "$HOST_GID" >/dev/null 2>&1; then' >> /usr/local/bin/entrypoint.sh && \
+    echo '        groupadd -g "$HOST_GID" builder' >> /usr/local/bin/entrypoint.sh && \
+    echo '    fi' >> /usr/local/bin/entrypoint.sh && \
+    echo '    ' >> /usr/local/bin/entrypoint.sh && \
+    echo '    # Create user if it does not exist' >> /usr/local/bin/entrypoint.sh && \
+    echo '    if ! getent passwd "$HOST_UID" >/dev/null 2>&1; then' >> /usr/local/bin/entrypoint.sh && \
+    echo '        useradd -u "$HOST_UID" -g "$HOST_GID" -m -s /bin/bash builder' >> /usr/local/bin/entrypoint.sh && \
+    echo '        echo "builder ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers' >> /usr/local/bin/entrypoint.sh && \
+    echo '        ' >> /usr/local/bin/entrypoint.sh && \
+    echo '        # Set up user environment' >> /usr/local/bin/entrypoint.sh && \
+    echo '        echo '\''export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"'\'' >> /home/builder/.bashrc' >> /usr/local/bin/entrypoint.sh && \
+    echo '        echo '\''export SHELL="/bin/bash"'\'' >> /home/builder/.bashrc' >> /usr/local/bin/entrypoint.sh && \
+    echo '        echo '\''export CONFIG_SHELL="/bin/bash"'\'' >> /home/builder/.bashrc' >> /usr/local/bin/entrypoint.sh && \
+    echo '        echo '\''export FORCE=1'\'' >> /home/builder/.bashrc' >> /usr/local/bin/entrypoint.sh && \
+    echo '    fi' >> /usr/local/bin/entrypoint.sh && \
+    echo '    ' >> /usr/local/bin/entrypoint.sh && \
+    echo '    # Ensure workspace permissions' >> /usr/local/bin/entrypoint.sh && \
+    echo '    chown -R "$HOST_UID:$HOST_GID" /workspace 2>/dev/null || true' >> /usr/local/bin/entrypoint.sh && \
+    echo '    ' >> /usr/local/bin/entrypoint.sh && \
+    echo '    # Switch to the created user' >> /usr/local/bin/entrypoint.sh && \
+    echo '    exec gosu "$HOST_UID:$HOST_GID" "$@"' >> /usr/local/bin/entrypoint.sh && \
+    echo 'else' >> /usr/local/bin/entrypoint.sh && \
+    echo '    # Fallback: run as root with warning' >> /usr/local/bin/entrypoint.sh && \
+    echo '    echo "WARNING: Running as root. Set HOST_UID and HOST_GID for better security."' >> /usr/local/bin/entrypoint.sh && \
+    echo '    exec "$@"' >> /usr/local/bin/entrypoint.sh && \
+    echo 'fi' >> /usr/local/bin/entrypoint.sh && \
+    chmod +x /usr/local/bin/entrypoint.sh
 
 # Set environment variables for OpenWrt build
-ENV PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/workspace/build/openwrt/host/bin"
+ENV PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 ENV FORCE=1
-ENV STAGING_DIR="/workspace/build/openwrt/"
-ENV TOPDIR="/workspace/build/openwrt"
 ENV SHELL="/bin/bash"
 ENV CONFIG_SHELL="/bin/bash"
 

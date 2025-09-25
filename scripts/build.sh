@@ -88,6 +88,11 @@ setup_openwrt() {
     
     log_info "Setting up OpenWrt build environment..."
     
+    # Ensure build directories exist
+    log_info "Creating build directory structure..."
+    mkdir -p "$BUILD_DIR"
+    mkdir -p "$OPENWRT_DIR"
+    
     # Clean out any existing content in the mounted directory
     if [ -d "$OPENWRT_DIR" ]; then
         log_info "Cleaning existing OpenWrt directory content..."
@@ -156,6 +161,10 @@ build_firmware() {
     local profile="$3"
     
     cd "$OPENWRT_DIR"
+    
+    # Ensure required build directories exist that OpenWrt might need
+    mkdir -p "${BUILD_DIR}/host"
+    mkdir -p "${BUILD_DIR}/staging_dir"
     
     log_info "Expanding configuration..."
     make defconfig

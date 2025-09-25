@@ -7,15 +7,15 @@ services:
     volumes:
       # Mount the entire project directory
       - .:/workspace:rw
-      # Mount a persistent volume for the OpenWrt source and build cache
-      # This aligns with BUILD_DIR="${PROJECT_ROOT}/build" in build.sh
-      - openwrt-build-cache:/workspace/build/openwrt:rw
+      # Mount a persistent volume for the entire build directory (not just openwrt subdirectory)
+      # This allows OpenWrt to create host/ and other directories as needed
+      - openwrt-build-cache:/workspace/build:rw
       # Optional: Mount ccache directory for faster compilation
       - ccache-data:/home/builder/.ccache
     working_dir: /workspace
     environment:
-      - HOST_UID=${UID:-1000}
-      - HOST_GID=${GID:-1000}
+      - HOST_UID=${HOST_UID:-1000}
+      - HOST_GID=${HOST_GID:-1000}
       - CCACHE_DIR=/home/builder/.ccache
       - CCACHE_MAX_SIZE=10G
       - FORCE_UNSAFE_CONFIGURE=1
@@ -37,12 +37,12 @@ services:
     container_name: openwrt-quick-build
     volumes:
       - .:/workspace:rw
-      - openwrt-build-cache:/workspace/build/openwrt:rw
+      - openwrt-build-cache:/workspace/build:rw
       - ccache-data:/home/builder/.ccache
     working_dir: /workspace
     environment:
-      - HOST_UID=${UID:-1000}
-      - HOST_GID=${GID:-1000}
+      - HOST_UID=${HOST_UID:-1000}
+      - HOST_GID=${HOST_GID:-1000}
       - CCACHE_DIR=/home/builder/.ccache
       - CCACHE_MAX_SIZE=10G
       - FORCE_UNSAFE_CONFIGURE=1
@@ -50,7 +50,7 @@ services:
       - build
 
 volumes:
-  # Persistent volume for OpenWrt build files and cache
+  # Persistent volume for OpenWrt build directory (includes host/, openwrt/, etc.)
   openwrt-build-cache:
     driver: local
   # Persistent volume for ccache to speed up compilation
