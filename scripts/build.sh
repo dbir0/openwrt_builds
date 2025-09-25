@@ -158,17 +158,15 @@ build_firmware() {
     cd "$OPENWRT_DIR"
     
     log_info "Expanding configuration..."
-    make defconfig
+    make menuconfig
     
     log_info "Running menuconfig (non-interactive)..."
     # For automated builds, we skip interactive menuconfig
     # Configuration is already applied from device and profile configs
     
-    log_info "Cleaning previous build and preparing download..."
-    make defconfig download clean world
     
     log_info "Pre-downloading packages with $jobs parallel jobs..."
-    make -j"$jobs" download
+    make -j"$jobs"
     
     log_info "Starting main build with $jobs parallel jobs..."
     log_info "Device: $device, Profile: $profile"
