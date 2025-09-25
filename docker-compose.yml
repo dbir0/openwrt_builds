@@ -7,8 +7,9 @@ services:
     volumes:
       # Mount the entire project directory
       - .:/workspace:rw
-      # Mount a persistent volume for the build cache to speed up rebuilds
-      - openwrt-build-cache:/workspace/build
+      # Mount a persistent volume for the OpenWrt source and build cache
+      # This aligns with BUILD_DIR="${PROJECT_ROOT}/build" in build.sh
+      - openwrt-build-cache:/workspace/build/openwrt:rw
       # Optional: Mount ccache directory for faster compilation
       - ccache-data:/home/builder/.ccache
     working_dir: /workspace
@@ -36,7 +37,7 @@ services:
     container_name: openwrt-quick-build
     volumes:
       - .:/workspace:rw
-      - openwrt-build-cache:/workspace/build
+      - openwrt-build-cache:/workspace/build/openwrt:rw
       - ccache-data:/home/builder/.ccache
     working_dir: /workspace
     environment:
