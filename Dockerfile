@@ -37,6 +37,7 @@ RUN apt-get update && apt-get install -y \
     patch \
     bash \
     perl \
+    coreutils \
     && rm -rf /var/lib/apt/lists/*
 
 # Fix common symbolic link issues in containers and verify binaries
