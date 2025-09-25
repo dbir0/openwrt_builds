@@ -97,10 +97,27 @@ setup_openwrt() {
     
     cd "$OPENWRT_DIR"
     
-    log_info "Checking out branch: $branch"
-    git fetch --all --tags
-    git checkout "$branch"
-    git pull origin "$branch" 2>/dev/null || true
+    log_info "Fetching latest tags and branches..."
+    git fetch --all --tags --force
+    
+    # Check if it's a tag or branch
+    if git tag -l | grep -q "^${branch}$"; then
+        log_info "Checking out tag: $branch"
+        git checkout "tags/$branch"
+    elif git branch -r | grep -q "origin/$branch"; then
+        log_info "Checking out branch: $branch"
+        git checkout "$branch"
+        git pull origin "$branch" 2>/dev/null || true
+    else
+        log_error "Neither tag nor branch found for: $branch"
+        log_info "Available tags:"
+        git tag -l | tail -10
+        log_info "Available branches:"
+        git branch -r | head -10
+        exit 1
+    fi
+    
+    log_info "Current OpenWrt version: $(git describe --tags --always)"
     
     log_info "Updating and installing feeds..."
     ./scripts/feeds update -a
