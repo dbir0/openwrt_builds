@@ -88,10 +88,10 @@ setup_openwrt() {
     
     log_info "Setting up OpenWrt build environment..."
     
-    # Remove the directory if it exists but is empty (created by Docker volume mount)
-    if [ -d "$OPENWRT_DIR" ] && [ ! "$(ls -A "$OPENWRT_DIR" 2>/dev/null)" ]; then
-        log_info "Removing empty OpenWrt directory created by volume mount..."
-        rmdir "$OPENWRT_DIR"
+    # Remove the directory if it exists (created by Docker volume mount)
+    if [ -d "$OPENWRT_DIR" ]; then
+        log_info "Removing existing OpenWrt directory..."
+        rm -rf "$OPENWRT_DIR"
     fi
     
     log_info "Cloning OpenWrt repository..."
