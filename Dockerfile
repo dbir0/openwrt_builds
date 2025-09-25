@@ -36,9 +36,18 @@ RUN apt-get update && apt-get install -y \
     binutils \
     patch \
     bash \
+    perl \
     && rm -rf /var/lib/apt/lists/*
 
-    # python3 to bash ai added
+# Fix common symbolic link issues in containers and verify binaries
+RUN ln -sf /bin/bash /usr/bin/bash && \
+    # Verify perl installation and fix PATH issues \
+    which perl && \
+    ls -la /usr/bin/perl && \
+    # Test perl execution \
+    perl --version && \
+    # Ensure common interpreters are in expected locations \
+    ln -sf /usr/bin/python3 /usr/bin/python || true
 
 
 # Set up working directory
@@ -52,10 +61,17 @@ RUN cat > /usr/local/bin/entrypoint.sh << 'EOF'
 #!/bin/bash
 set -e
 
-# Ensure proper bash environment
+# Ensure proper environment
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 export SHELL="/bin/bash"
 export CONFIG_SHELL="/bin/bash"
 export FORCE=1
+
+# Debug: Test common interpreters
+echo "Testing interpreters..."
+which bash && bash --version | head -1
+which perl && perl --version | head -1
+which python3 && python3 --version
 
 if [ -n "$HOST_UID" ] && [ -n "$HOST_GID" ]; then
     # Create group if it doesn't exist
@@ -69,6 +85,7 @@ if [ -n "$HOST_UID" ] && [ -n "$HOST_GID" ]; then
         echo "builder ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
         
         # Set up user environment
+        echo 'export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"' >> /home/builder/.bashrc
         echo 'export SHELL="/bin/bash"' >> /home/builder/.bashrc
         echo 'export CONFIG_SHELL="/bin/bash"' >> /home/builder/.bashrc
         echo 'export FORCE=1' >> /home/builder/.bashrc
@@ -90,8 +107,7 @@ EOF
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Set environment variables for OpenWrt build
-ENV PATH="/workspace/build/openwrt/staging_dir/host/bin:$PATH"
-ENV FORCE_UNSAFE_CONFIGURE=1
+ENV PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/workspace/build/openwrt/staging_dir/host/bin"
 ENV FORCE=1
 ENV STAGING_DIR="/workspace/build/openwrt/staging_dir"
 ENV TOPDIR="/workspace/build/openwrt"
