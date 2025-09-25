@@ -88,19 +88,34 @@ setup_openwrt() {
     
     log_info "Setting up OpenWrt build environment..."
     
-    # Remove the directory if it exists (created by Docker volume mount)
+    # Clean out any existing content in the mounted directory
     if [ -d "$OPENWRT_DIR" ]; then
-        log_info "Removing existing OpenWrt directory..."
-        rm -rf "$OPENWRT_DIR"
+        log_info "Cleaning existing OpenWrt directory content..."
+        rm -rf "$OPENWRT_DIR"/*
+        rm -rf "$OPENWRT_DIR"/.[!.]*
     fi
     
-    log_info "Cloning OpenWrt repository..."
-    git clone "$OPENWRT_REPO" "$OPENWRT_DIR"
+    # Clone to a temporary directory first
+    local temp_dir="/tmp/openwrt_clone"
+    log_info "Cloning OpenWrt repository to temporary location..."
+    rm -rf "$temp_dir"
+    git clone "$OPENWRT_REPO" "$temp_dir"
     
-    cd "$OPENWRT_DIR"
+    cd "$temp_dir"
     
     log_info "Checking out tag: $branch"
     git checkout "$branch"
+    
+    # Move everything from temp to the mounted directory
+    log_info "Moving repository to build directory..."
+    mv "$temp_dir"/* "$OPENWRT_DIR"/
+    mv "$temp_dir"/.git "$OPENWRT_DIR"/
+    mv "$temp_dir"/.[!.]* "$OPENWRT_DIR"/ 2>/dev/null || true
+    
+    # Clean up temp directory
+    rm -rf "$temp_dir"
+    
+    cd "$OPENWRT_DIR"
     
     log_info "Current OpenWrt version: $(git describe --tags --always)"
     
