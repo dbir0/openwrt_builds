@@ -88,7 +88,6 @@ setup_openwrt() {
     
     log_info "Setting up OpenWrt build environment..."
     
-    mkdir -p "$BUILD_DIR"
     
     log_info "Cloning OpenWrt repository..."
     git clone "$OPENWRT_REPO" "$OPENWRT_DIR"
