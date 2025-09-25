@@ -13,6 +13,8 @@ services:
       - ccache-data:/home/builder/.ccache
     working_dir: /workspace
     environment:
+      - HOST_UID=${UID:-1000}
+      - HOST_GID=${GID:-1000}
       - CCACHE_DIR=/home/builder/.ccache
       - CCACHE_MAX_SIZE=10G
       - FORCE_UNSAFE_CONFIGURE=1
@@ -38,6 +40,8 @@ services:
       - ccache-data:/home/builder/.ccache
     working_dir: /workspace
     environment:
+      - HOST_UID=${UID:-1000}
+      - HOST_GID=${GID:-1000}
       - CCACHE_DIR=/home/builder/.ccache
       - CCACHE_MAX_SIZE=10G
       - FORCE_UNSAFE_CONFIGURE=1
