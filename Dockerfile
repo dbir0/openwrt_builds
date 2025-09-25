@@ -108,9 +108,9 @@ EOF
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Set environment variables for OpenWrt build
-ENV PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/workspace/build/openwrt/staging_dir/host/bin"
+ENV PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/workspace/build/openwrt/host/bin"
 ENV FORCE=1
-ENV STAGING_DIR="/workspace/build/openwrt/staging_dir"
+ENV STAGING_DIR="/workspace/build/openwrt/"
 ENV TOPDIR="/workspace/build/openwrt"
 ENV SHELL="/bin/bash"
 ENV CONFIG_SHELL="/bin/bash"

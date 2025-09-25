@@ -158,7 +158,7 @@ build_firmware() {
     cd "$OPENWRT_DIR"
     
     log_info "Expanding configuration..."
-    make menuconfig
+    make defconfig
     
     log_info "Running menuconfig (non-interactive)..."
     # For automated builds, we skip interactive menuconfig
