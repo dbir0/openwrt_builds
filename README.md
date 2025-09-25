@@ -2,7 +2,7 @@
 
 [![Build Status](https://github.com/dbir0/opernwrt_builds/workflows/OpenWrt%20Build%20System/badge.svg)](https://github.com/dbir0/opernwrt_builds/actions)
 [![License](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](https://www.gnu.org/licenses/gpl-2.0)
-[![OpenWrt](https://img.shields.io/badge/OpenWrt-23.05-orange.svg)](https://openwrt.org/)
+[![OpenWrt](https://img.shields.io/badge/OpenWrt-24.10.3-orange.svg)](https://openwrt.org/)
 
 
 ## Build Options
@@ -12,10 +12,10 @@
 ./scripts/build.sh --help
 
 # Parallel build with specific job count
-./scripts/build.sh --device netgear-r7800 --profile home --jobs 8
+./scripts/build.sh --device netgear-r6850 --profile home --jobs 8
 
 # Force rebuild
-./scripts/build.sh --device netgear-r7800 --profile home --force
+./scripts/build.sh --device netgear-r6850 --profile home --force
 ```
 
 

@@ -1,22 +1,12 @@
 {
   "include": [
     {
-      "device": "netgear-r7800",
+      "device": "netgear-r6850",
       "profile": "home",
       "version": "v24.10.3"
     },
     {
-      "device": "netgear-r7800",
-      "profile": "business",
-      "version": "v24.10.3"
-    },
-    {
-      "device": "netgear-r6900v2",
-      "profile": "home",
-      "version": "v24.10.3"
-    },
-    {
-      "device": "netgear-r6900v2",
+      "device": "netgear-r6850",
       "profile": "business",
       "version": "v24.10.3"
     }

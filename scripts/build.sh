@@ -43,7 +43,7 @@ OpenWrt Build Script
 Usage: $0 [OPTIONS]
 
 Options:
-    -d, --device DEVICE     Target device (netgear-r7800, netgear-r6900v2)
+    -d, --device DEVICE     Target device (netgear-r6850)
     -p, --profile PROFILE   Build profile (home, business)
     -b, --branch BRANCH     OpenWrt branch/tag (default: $DEFAULT_BRANCH)
     -c, --clean            Clean build environment before building
@@ -52,13 +52,12 @@ Options:
     -h, --help             Show this help message
 
 Examples:
-    $0 -d netgear-r7800 -p home
-    $0 -d netgear-r6900v2 -p business --clean
-    $0 --device netgear-r7800 --profile home --branch openwrt-22.03
+    $0 -d netgear-r6850 -p home
+    $0 -d netgear-r6850 -p business --clean
+    $0 --device netgear-r6850 --profile home --branch openwrt-24.10
 
 Supported Devices:
-    netgear-r7800    - Netgear Nighthawk X4S R7800
-    netgear-r6900v2  - Netgear Nighthawk AC1900 R6900v2
+    netgear-r6850    - Netgear R6850 AC2000 (ramips/mt7621)
 
 Supported Profiles:
     home      - Security-focused home configuration
@@ -249,7 +248,7 @@ main() {
     fi
     
     # Validate device
-    if [[ ! "$device" =~ ^(netgear-r7800|netgear-r6900v2)$ ]]; then
+    if [[ ! "$device" =~ ^(netgear-r6850)$ ]]; then
         log_error "Unsupported device: $device"
         show_usage
         exit 1
