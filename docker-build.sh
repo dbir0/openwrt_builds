@@ -62,7 +62,7 @@ EOF
 
 build_image() {
     log_info "Building Docker image..."
-    if ! docker-compose build openwrt-builder; then
+    if ! docker compose build openwrt-builder; then
         log_error "Failed to build Docker image"
         exit 1
     fi
@@ -76,7 +76,7 @@ run_build() {
     fi
     
     log_info "Starting OpenWrt build in container..."
-    docker-compose run --rm openwrt-builder ./scripts/build.sh "$@"
+    docker compose run --rm openwrt-builder ./scripts/build.sh "$@"
 }
 
 open_shell() {
@@ -86,17 +86,17 @@ open_shell() {
     fi
     
     log_info "Opening interactive shell in build container..."
-    docker-compose run --rm openwrt-builder /bin/bash
+    docker compose run --rm openwrt-builder /bin/bash
 }
 
 clean_environment() {
     log_info "Cleaning build environment and Docker volumes..."
     
     # Stop and remove containers
-    docker-compose down --remove-orphans
+    docker compose down --remove-orphans
     
     # Remove volumes
-    docker-compose down --volumes
+    docker compose down --volumes
     
     # Remove Docker image
     docker image rm opernwrt_builds_openwrt-builder 2>/dev/null || true
@@ -111,12 +111,12 @@ clean_environment() {
 }
 
 show_logs() {
-    docker-compose logs openwrt-builder
+    docker compose logs openwrt-builder
 }
 
 show_status() {
     log_info "Container status:"
-    docker-compose ps
+    docker compose ps
     
     log_info "Docker volumes:"
     docker volume ls | grep opernwrt_builds || echo "No volumes found"
