@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 # Avoid interactive prompts during package installation
 ENV DEBIAN_FRONTEND=noninteractive
@@ -16,36 +16,14 @@ RUN apt-get update && apt-get install -y \
     gettext \
     git \
     libncurses5-dev \
-    libncurses5 \
     libssl-dev \
-    python3-distutils \
+    python3-setuptools \
     rsync \
+    swig \
     unzip \
-    wget \
-    xsltproc \
     zlib1g-dev \
     file \
-    curl \
-    python3 \
-    python3-pip \
-    python3-setuptools \
-    python3-yaml \
-    python3-dev \
-    libc6-dev \
-    libffi-dev \
-    libxml2-dev \
-    libxslt1-dev \
-    make \
-    patch \
-    tar \
-    time \
-    which \
-    ccache \
-    ecj \
-    fastjar \
-    java-propose-classpath \
-    libelf-dev \
-    subversion \
+    wget \
     && rm -rf /var/lib/apt/lists/*
 
 # Create build user (non-root for security)
