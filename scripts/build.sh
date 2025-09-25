@@ -10,8 +10,8 @@ BUILD_DIR="${PROJECT_ROOT}/build"
 OPENWRT_DIR="${BUILD_DIR}/openwrt"
 
 # Configuration
-OPENWRT_REPO="https://git.openwrt.org/openwrt/openwrt.git"
-DEFAULT_BRANCH="openwrt-23.05"
+OPENWRT_REPO="https://github.com/openwrt/openwrt.git"
+DEFAULT_BRANCH="v24.10.3"
 
 # Colors for output
 RED='\033[0;31m'
