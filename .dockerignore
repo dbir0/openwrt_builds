@@ -1,0 +1,32 @@
+# Ignore build artifacts
+build/
+*.log
+*.tmp
+
+# Ignore Git
+.git/
+.gitignore
+
+# Ignore IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore Docker files from being copied into container
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Keep important files
+!configs/
+!scripts/
+!docs/
+!*.md
+!*.json
+!Makefile
+!LICENSE

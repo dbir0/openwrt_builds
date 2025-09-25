@@ -1,0 +1,53 @@
+services:
+  openwrt-builder:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: openwrt-build
+    volumes:
+      # Mount the entire project directory
+      - .:/workspace:rw
+      # Mount a persistent volume for the build cache to speed up rebuilds
+      - openwrt-build-cache:/workspace/build
+      # Optional: Mount ccache directory for faster compilation
+      - ccache-data:/home/builder/.ccache
+    working_dir: /workspace
+    environment:
+      - CCACHE_DIR=/home/builder/.ccache
+      - CCACHE_MAX_SIZE=10G
+      - FORCE_UNSAFE_CONFIGURE=1
+    stdin_open: true
+    tty: true
+    # Set resource limits (adjust based on your system)
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+        reservations:
+          memory: 2G
+
+  # Service for quick build commands
+  openwrt-build:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: openwrt-quick-build
+    volumes:
+      - .:/workspace:rw
+      - openwrt-build-cache:/workspace/build
+      - ccache-data:/home/builder/.ccache
+    working_dir: /workspace
+    environment:
+      - CCACHE_DIR=/home/builder/.ccache
+      - CCACHE_MAX_SIZE=10G
+      - FORCE_UNSAFE_CONFIGURE=1
+    profiles:
+      - build
+
+volumes:
+  # Persistent volume for OpenWrt build files and cache
+  openwrt-build-cache:
+    driver: local
+  # Persistent volume for ccache to speed up compilation
+  ccache-data:
+    driver: local

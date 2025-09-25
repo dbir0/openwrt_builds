@@ -7,6 +7,7 @@
 
 ## Build Options
 
+### Native Build
 ```bash
 # All available options
 ./scripts/build.sh --help
@@ -17,6 +18,44 @@
 # Force rebuild
 ./scripts/build.sh --device netgear-r6850 --profile home --force
 ```
+
+### Docker Build
+For systems where installing build dependencies (like libncurses, awk, etc.) is difficult:
+
+```bash
+# Make the docker wrapper executable
+chmod +x docker-build.sh
+
+# Build using Docker (all build options supported)
+./docker-build.sh build -d netgear-r6850 -p home
+
+# Build with clean environment
+./docker-build.sh build -d netgear-r6850 -p business --clean
+
+# Open interactive shell in build container
+./docker-build.sh shell
+
+# Clean build environment and Docker volumes
+./docker-build.sh clean
+
+# Check status
+./docker-build.sh status
+```
+
+### Requirements
+
+**Native Build:**
+- libncurses5-dev
+- build-essential
+- gawk
+- git, wget, rsync
+- python3
+- Other standard build tools
+
+**Docker Build:**
+- Docker
+- Docker Compose
+- No other dependencies needed!
 
 
 ## Adding New Devices
