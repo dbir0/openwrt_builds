@@ -92,47 +92,16 @@ setup_openwrt() {
     
     if [ ! -d "$OPENWRT_DIR" ]; then
         log_info "Cloning OpenWrt repository..."
-        git clone "$OPENWRT_REPO" "$OPENWRT_DIR"
+        git clone --depth 1 --branch "$branch" "$OPENWRT_REPO" "$OPENWRT_DIR"
+    else
+        cd "$OPENWRT_DIR"
+        log_info "Updating existing repository..."
+        git fetch --depth 1 origin "$branch"
+        git checkout "$branch"
     fi
     
     cd "$OPENWRT_DIR"
-    
-    log_info "Fetching latest tags and branches..."
-    # Force fetch all refs to ensure we get the latest tags
-    git fetch origin --force
-    git fetch origin --tags --force
-    
-    # Try to checkout the version (works for both tags and branches)
-    if git checkout "$branch" 2>/dev/null; then
-        log_info "Successfully checked out: $branch"
-    elif git checkout "origin/$branch" 2>/dev/null; then
-        log_info "Successfully checked out branch: origin/$branch"
-        # Create local tracking branch
-        git checkout -b "$branch" "origin/$branch" 2>/dev/null || true
-    elif git checkout "tags/$branch" 2>/dev/null; then
-        log_info "Successfully checked out tag: $branch"
-    else
-        log_error "Failed to checkout: $branch"
-        log_info "Trying to fetch specific tag/branch..."
-        
-        # Try to fetch the specific ref
-        git fetch origin "+refs/tags/$branch:refs/tags/$branch" 2>/dev/null || true
-        git fetch origin "+refs/heads/$branch:refs/remotes/origin/$branch" 2>/dev/null || true
-        
-        # Try again after specific fetch
-        if git checkout "$branch" 2>/dev/null || git checkout "tags/$branch" 2>/dev/null; then
-            log_info "Successfully checked out after specific fetch: $branch"
-        else
-            log_error "Unable to find version: $branch"
-            log_info "Available tags (last 10):"
-            git tag -l | sort -V | tail -10 || echo "No tags found"
-            log_info "Available branches:"
-            git branch -r | head -10 || echo "No remote branches found"
-            exit 1
-        fi
-    fi
-    
-    log_info "Current OpenWrt version: $(git describe --tags --always 2>/dev/null || git rev-parse --short HEAD)"
+    log_info "Current OpenWrt version: $(git describe --tags --always)"
     
     log_info "Updating and installing feeds..."
     ./scripts/feeds update -a
